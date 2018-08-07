@@ -46,10 +46,8 @@
       --}}      
       {!! Form::submit('Submit !', array('class'=> 'btn btn-sm btn-primary')) !!}
 
-      <a href="javascript:location.href='{{ route('todos.index') }}'" class="btn btn-sm btn-success">
-        <span class="glyphicon glyphicon-circle-arrow-left"></span> Back
-      </a>  
-        
+      @include('buttons.back')
+
       {!! Form::close() !!}
   </div>
 @endsection

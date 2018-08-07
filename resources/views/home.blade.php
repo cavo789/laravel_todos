@@ -15,6 +15,8 @@
                     @endif
 
                     You are logged in!
+
+                    <a href="/">Back to homepage</a>
                 </div>
             </div>
         </div>

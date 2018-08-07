@@ -17,6 +17,12 @@ class TodoController extends Controller
 	public function __construct(TodoRepositoryInterface $todoRepository)
 	{
 		$this->todoRepository = $todoRepository;
+
+		// Methods in the controller needs to be logged in
+		// Except getting the list of todos (method index) and showing
+		// one of them (method show).
+		// All other methods requires a valid login.
+		$this->middleware('auth', ['except' => ['index', 'show']]);
 	}
 
 	/**

@@ -9,7 +9,7 @@
   --}}
   @isset($data)
     {{-- 
-      Show informations like title, description and timestamps
+      Show information's like title, description and timestamps
     --}}
     <h3>{{ $data->title }}</h3>
     <p>{{ $data->description }}</p>
@@ -32,22 +32,13 @@
 @endsection
 
 @section('navigation')
-  {{--
-    Only for logged-in users, show action's buttons
-  --}}
-  @if(Illuminate\Support\Facades\Auth::check())      
-    <a href="javascript:history.back()" class="back btn btn-sm btn-success">
-      <span class="glyphicon glyphicon-circle-arrow-left"></span> Back
-    </a>
+  @include('buttons.back')
+  @auth 
     <span class="buttons">
-      <button class="btn btn-sm btn-primary edit">
-        <i class="glyphicon glyphicon-edit"></i> Update
-      </button> 
-      <button class="btn btn-sm btn-danger delete">
-        <i class="glyphicon glyphicon-remove"></i> Delete
-      </button>
+      @include('buttons.edit')
+      @include('buttons.delete')
     </span>
-  @endif
+  @endauth
 @endsection
 
 @section('script')
