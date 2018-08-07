@@ -18,3 +18,7 @@ Route::resource('todos', 'TodoController')->middleware('auth');
 
 // Default homepage : show the list of todos
 Route::get('/', 'TodoController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
