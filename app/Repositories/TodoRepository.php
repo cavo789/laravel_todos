@@ -20,7 +20,9 @@ class TodoRepository implements TodoRepositoryInterface
 
 	public function getPaginate(int $n)
 	{
-		return $this->todo->paginate($n);
+		return $this->todo
+			->latest('todos.created_at')
+			->paginate($n);
 	}
 
 	/**

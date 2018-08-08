@@ -11,7 +11,6 @@ use Response;
 class TodoController extends Controller
 {
 	protected $todoRepository;
-
 	protected $nbrPerPage = 5;
 
 	public function __construct(TodoRepositoryInterface $todoRepository)

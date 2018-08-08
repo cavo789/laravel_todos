@@ -39,6 +39,7 @@ DB_PASSWORD=
 10. Add fake data: `php artisan todos:populate`
 11. Generate a new key by typing `php artisan key:generate` on the prompt
 12. Run `composer require "laravelcollective/html"` for getting the HTML helper
+13. Run `composer require rap2hpoutre/laravel-log-viewer --dev` to get the log-viewer view/controller
 
 ## Usage
 
@@ -62,7 +63,7 @@ PRs not accepted.
 
 ## A few screenshots
 
--   List of existing todos. Each todo has actions like `Show`, `Edit` and `Delete`
+-   List of existing todos. Each todo has actions like `Show`, `Edit` and `Delete`. The two last actions will be displayed only to logged-in users.
 
 ![](.images/index.png)
 
@@ -87,3 +88,7 @@ _Default is `christophe@todos.com` / `admin`_
 -   Artisan - Populate tables with fake data
 
 ![](.images/populate.png)
+
+-   404 error page with custom animation
+
+![](.images/404.png)
