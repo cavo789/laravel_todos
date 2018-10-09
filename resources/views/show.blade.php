@@ -2,7 +2,19 @@
 
 @section('content')
 
-  <div class="msg hide alert alert-success alert-dismissible">&nbsp;</div>
+<?php
+  if (Session::has('message')) {
+  	$alert = '<div class="alert alert-%s alert-dismissible ' .
+	'fade show" role="alert">%s' .
+	  '<button type="button" class="close" data-dismiss="alert" ' .
+	  'aria-label="Close"><span aria-hidden="true">&times;</span> ' .
+	  '</button></div>';
+
+  	foreach (Session::get('message') as $msg) {
+  		echo sprintf($alert, $msg['type'], $msg['message']);
+  	}
+  }
+?>
 
   {{-- 
     Display the detail of a todo; make sure we've one

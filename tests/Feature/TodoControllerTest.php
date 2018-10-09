@@ -3,48 +3,112 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Auth;
+use app\Todo;
+use Faker;
 
 class TodoControllerTest extends TestCase
 {
+	private $email = 'christophe@todos.com';
+	private $password = 'admin';
+
 	/**
-	 * A basic test example.
+	 * Test a few URLs as a guest
 	 *
-	 * @return void
+	 * @return boolean
 	 */
-	public function testExample()
+	public function testGuestURLs() : bool
 	{
+		// To be sure, start the tests as guest
+		if (Auth::check()) {
+			Auth::logout();
+		}
+
 		// These routes are publicly available
 		// The expected HTTP code is 200 ("Ok")
-		$arr = ['todos.index',  'login', 'password.request'];
+		$arr = ['todos.index', 'login', 'password.request'];
+
 		foreach ($arr as $name) {
 			$url = route($name);
-			fwrite(STDERR, print_r('Check 200 for ' . $url . PHP_EOL, true));
+			$this->output('Check 200 for ' . $url);
 
 			$response = $this->call('GET', $url);
 			$response->assertStatus(200);
 		}
 
-		fwrite(STDERR, print_r(PHP_EOL, true));
+		// These routes are restricted to logged-in users
+		// so the expected HTTP code is 302 ("HTTP redirection") and
+		// should redirect to the login screen
+		$uri = route('login');
 
-		// These routes are publicly restricted to logged-in users
-		// so the expected HTTP code is 302 ("HTTP redirection")
-		$arr = ['todos.create', 'logout'];
-		foreach ($arr as $name) {
-			$url = route($name);
-			fwrite(STDERR, print_r('Check 302 for ' . $url . PHP_EOL, true));
-			$response = $this->call('GET', $url);
-			$response->assertStatus(302);
+		$arr = [
+			'todos.create' => 'GET',
+			'todos.edit' => 'GET',
+			'todos.destroy' => 'DELETE',
+			'todos.update' => 'PUT'
+		];
+
+		foreach ($arr as $name => $method) {
+			// Except for create, we need to provide an ID
+			if ($name == 'todos.create') {
+				$url = route($name);
+			} else {
+				$url = route($name, '9999');
+			}
+
+			$this->output('Check 302 for [' . $method . '] ' . $url);
+
+			$response = $this->call($method, $url);
+			$response->assertRedirect($uri);
 		}
 
-		fwrite(STDERR, print_r(PHP_EOL, true));
+		return true;
+	}
 
-		// If not logged-in, the creation form should redirect (302)
-		// to the login screen
-		$url = route('todos.create');
-		fwrite(STDERR, print_r('Check redirection for ' . $url . PHP_EOL, true));
+	/**
+	 * Try posting some data and check
+	 *
+	 * @return boolean
+	 */
+	public function testPosting() : bool
+	{
+		self::output('Connect as ' . $this->email . ' and ' .
+			'post some data');
 
-		$response = $this->call('GET', $url);
-		$response->assertStatus(302);
-		$response->assertSee('<title>Redirecting to ' . route('login') . '</title>');
+		// Connect
+		$user = [
+			'email' => $this->email,
+			'password' => $this->password
+		];
+
+		if (Auth::attempt($user)) {
+			// Ok, we're logged-in
+
+			$faker = Faker\Factory::create('fr_FR');
+
+			$postData = [
+				'title' => $faker->sentence($nbWords = 6, $variableNbWords = true),
+				'description' => 'Filled in by PHPUnit'
+			];
+
+			// Submit the record
+			$response = $this->call('POST', route('todos.store'), $postData);
+
+			// The response would be a redirection to the URL
+			// for displaying the detail of the inserted record
+			// 1. Retrieve the last inserted record; get his ID
+			$id = Todo::max('id');
+
+			// 2. Build the URI to that page
+			// (f.i. http://127.0.0.1/todos/33
+			$uri = route('todos.show', $id);
+
+			self::output('Create new Todo #' . $id . ' and check returned URI');
+
+			// And now assert that it's fine
+			$response->assertRedirect($uri);
+		}
+
+		return true;
 	}
 }

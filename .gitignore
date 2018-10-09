@@ -13,6 +13,7 @@ storage/*.key
 .env.*.php
 .env.php
 .env
+_ide_helper.php
 Homestead.yaml
 Homestead.json
 

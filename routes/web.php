@@ -1,5 +1,15 @@
 <?php
-
+/*
+if (env('APP_DEBUG', false)) {
+	DB::listen(function ($query) {
+		echo '<pre class="app_debug">' .
+		'Query fired ' .
+		'"' . $query->sql . '" ' .
+		'<small>(' . __FILE__ . ' - ' . __LINE__ . ')</small>' .
+		'</pre>';
+	});
+}
+*/
 // Enable authentication routes
 Auth::routes();
 
