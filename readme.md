@@ -1,3 +1,5 @@
+![Banner](images/banner.jpg)
+
 # Laravel - Todos
 
 > Todos application that I'm creating while studying Laravel's framework
